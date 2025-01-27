@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Number Plate Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/stylelogin.css') }}">
+</head>
+<body>
+    <div class="title">Number Plate Detection System</div>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" action="/login" method="post">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
+                event.preventDefault(); 
+
+                var formData = new FormData(this);
+
+                fetch('/login', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showLoading();
+                        setTimeout(function() {
+                            window.location.href = 'index.html';
+                        }, 1000);
+                    } else {
+                        alert('Invalid credentials! Please try again.');
+                        document.querySelector('input[name="username"]').value = '';
+                        document.querySelector('input[name="password"]').value = '';
+                    }
+                });
+            });
+        });
+
+        function showLoading() {
+            var container = document.querySelector('.login-container');
+            var dotsContainer = document.createElement('section');
+            dotsContainer.classList.add('dots-container');
+            dotsContainer.innerHTML = `
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            `;
+            container.appendChild(dotsContainer);
+        }
+    </script>
+</body>
+</html>
